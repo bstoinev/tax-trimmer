@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 
 namespace DevOcean.TaxTrim
 {
@@ -12,33 +13,39 @@ namespace DevOcean.TaxTrim
         private decimal SocialInsuranceFactor = 0.15m;
         private decimal SocialInsuranceCeiling = 2000;
 
+        private readonly ILoggingFacility<TaxCalculator> Log;
+
         /// <summary>
         /// Initializes the <see cref="TaxCalculator" />
         /// </summary>
-        /// <param name="taxFreeCeiling">The maximum amount that is free of taxes.</param>
-        /// <param name="taxSize">The size, in percent of the tax.</param>
-        /// <param name="socialInsuranceCeiling">The maximum amount from which social contributions are deducted.</param>
-        /// <param name="socialInsuranceSize">The size, in percent of the social contributions tax.</param>
-        public TaxCalculator(decimal taxFreeCeiling, float taxSize, decimal socialInsuranceCeiling, float socialInsuranceSize)
+        /// <param name="log"></param>
+        /// <param name="options">The configuration of the tax system.</param>
+        public TaxCalculator(ILoggingFacility<TaxCalculator> log, IOptions<TaxSettings> options)
         {
-            if (taxFreeCeiling < 0)
+            var settings = options.Value;
+
+            if (settings.TaxTreshold < 0)
             {
-                throw new NotSupportedException($"{nameof(taxFreeCeiling)} cannot be a negative number.");
+                throw new NotSupportedException($"{nameof(settings.TaxTreshold)} cannot be a negative number.");
             }
-            else if (taxFreeCeiling > socialInsuranceCeiling)
+            else if (settings.TaxTreshold > settings.SocialContributionCeiling)
             {
-                throw new NotSupportedException($"The {nameof(socialInsuranceCeiling)} cannot be lower than the {nameof(taxFreeCeiling)}.");
+                throw new NotSupportedException($"The {nameof(settings.SocialContributionCeiling)} cannot be lower than the {nameof(settings.TaxTreshold)}.");
             }
-            else if (taxSize < 0 || socialInsuranceSize < 0)
+            else if (settings.TaxSize < 0 || settings.SocialContributionSize < 0)
             {
                 throw new NotSupportedException("There is no such a government :(");
             }
 
-            TaxFactor = Convert.ToDecimal(taxSize / 100);
-            TaxFreeCeiling = taxFreeCeiling;
+            TaxFactor = Convert.ToDecimal(settings.TaxSize / 100);
+            TaxFreeCeiling = settings.TaxTreshold;
 
-            SocialInsuranceCeiling = socialInsuranceCeiling - taxFreeCeiling;
-            SocialInsuranceFactor = Convert.ToDecimal(socialInsuranceSize / 100);
+            SocialInsuranceCeiling = settings.SocialContributionCeiling - settings.TaxTreshold;
+            SocialInsuranceFactor = Convert.ToDecimal(settings.SocialContributionSize / 100);
+
+            Log = log;
+
+            Log.Debug($"{nameof(TaxCalculator)} initialized with the follwing {nameof(TaxSettings)}: {settings}");
         }
 
         /// <summary>
@@ -50,20 +57,35 @@ namespace DevOcean.TaxTrim
         {
             var result = grossAmount < 0 ? 0 : grossAmount;
 
-            if (grossAmount >= TaxFreeCeiling)
+            if (result == 0)
             {
-                var taxableAmount = result - TaxFreeCeiling;
-
-                result -= taxableAmount * TaxFactor;
-
-                var socialInsuranceAmount = result - TaxFreeCeiling;
-
-                if (socialInsuranceAmount > SocialInsuranceCeiling)
+                Log.Debug($"A negative gross amount ({nameof(grossAmount)}) is being ignored.");
+            }
+            else
+            {
+                if (grossAmount >= TaxFreeCeiling)
                 {
-                    socialInsuranceAmount = SocialInsuranceCeiling;
-                }
+                    Log.Trace($"Deducting tax from {grossAmount} gross amount...");
 
-                result -= socialInsuranceAmount * SocialInsuranceFactor;
+                    var taxableAmount = result - TaxFreeCeiling;
+
+                    result -= taxableAmount * TaxFactor;
+
+                    var socialInsuranceAmount = result - TaxFreeCeiling;
+
+                    if (socialInsuranceAmount > SocialInsuranceCeiling)
+                    {
+                        socialInsuranceAmount = SocialInsuranceCeiling;
+                    }
+
+                    Log.Trace($"Deducting social contributions from {socialInsuranceAmount} taxable amount...");
+
+                    result -= socialInsuranceAmount * SocialInsuranceFactor;
+                }
+                else
+                {
+                    Log.Debug($"The gross amount is too small for any taxation: {grossAmount}");
+                }
             }
 
             return Math.Round(result, 2);
