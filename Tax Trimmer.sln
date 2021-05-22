@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevOcean.TaxTrim.Xunit", "Devocean.TaxTrim.Xunit\DevOcean.TaxTrim.Xunit.csproj", "{7E8FAA72-9011-4E02-8FF3-67DBCC59D285}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevOcean.TaxTrim.Cli", "DevOcean.TaxTrim.Cli\DevOcean.TaxTrim.Cli.csproj", "{38EEF1EC-98D5-4794-85CD-E3A490989AF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevOcean.TaxTrim", "DevOcean.TaxTrim\DevOcean.TaxTrim.csproj", "{4DADB43E-BEA5-4AA7-8C50-9750435CFE02}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E8FAA72-9011-4E02-8FF3-67DBCC59D285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E8FAA72-9011-4E02-8FF3-67DBCC59D285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E8FAA72-9011-4E02-8FF3-67DBCC59D285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E8FAA72-9011-4E02-8FF3-67DBCC59D285}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38EEF1EC-98D5-4794-85CD-E3A490989AF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38EEF1EC-98D5-4794-85CD-E3A490989AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38EEF1EC-98D5-4794-85CD-E3A490989AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38EEF1EC-98D5-4794-85CD-E3A490989AF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DADB43E-BEA5-4AA7-8C50-9750435CFE02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DADB43E-BEA5-4AA7-8C50-9750435CFE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DADB43E-BEA5-4AA7-8C50-9750435CFE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DADB43E-BEA5-4AA7-8C50-9750435CFE02}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA91DE6D-2D49-425A-907A-6226F7DC17CC}
+	EndGlobalSection
+EndGlobal
