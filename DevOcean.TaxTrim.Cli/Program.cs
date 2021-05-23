@@ -33,7 +33,9 @@ namespace DevOcean.TaxTrim.Cli
 
                 host = builder.Build();
 
-                log.Info("Tax Trimmer v.... initialized.");
+                var ver = typeof(Program).Assembly.GetName().Version;
+
+                log.Info($"Tax Trimmer {ver} initialized.");
                 log.Info("Press Ctrl+C to exit.");
             }
             catch (Exception ex)

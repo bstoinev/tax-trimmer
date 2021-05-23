@@ -40,6 +40,8 @@ namespace DevOcean.TaxTrim.Cli
         
         protected async Task ReadConsole(CancellationToken stopper)
         {
+            var timeout = TimeSpan.FromMilliseconds(100);
+
             while (!stopper.IsCancellationRequested)
             {
                 Console.Write("Gross amount> ");
@@ -60,9 +62,9 @@ namespace DevOcean.TaxTrim.Cli
                     }
                 }
 
-                // Apparently the infrastructure needs some time to process the Ctrl+C properly 
-                // A slight delay is introduced so the loop doesn't start prematurely and print unnecessary text on the console.
-                await Task.Delay(TimeSpan.FromMilliseconds(100), stopper);
+                // Apparently the infrastructure needs some time to process the Ctrl+C signal
+                // A slight delay is introduced so the loop doesn't restart prematurely and print unnecessary text on the console.
+                await Task.Delay(timeout, stopper);
             }
         }
     }
